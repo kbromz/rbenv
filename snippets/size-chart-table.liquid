@@ -1,0 +1,187 @@
+<style>
+  .size-chart-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: sans-serif;
+  }
+
+  .size-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .size-chart-title {
+    font-size: 20px;
+  }
+
+  .unit-toggle {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    color: #999;
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+  }
+
+  .unit-toggle span {
+    color: #999;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+  }
+
+  .unit-toggle span.active {
+    color: #000;
+    border-bottom: 1px solid #000;
+  }
+
+  .size-chart-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .size-chart-table th,
+  .size-chart-table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .size-chart-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+  }
+
+  .size-chart-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 1rem;
+    text-align: center;
+  }
+</style>
+
+<div class="size-chart-wrapper">
+  <div class="size-chart-header">
+    <div class="size-chart-title">BODY MEASUREMENTS</div>
+    <div class="unit-toggle">
+      <span class="unit-option active" data-unit="inches">INCHES</span>
+      <span class="unit-option" data-unit="cm">CM</span>
+    </div>
+  </div>
+
+  <table class="size-chart-table">
+    <thead>
+      <tr>
+        <th>SIZE</th>
+        <th>BUST</th>
+        <th>WAIST</th>
+        <th>HIP</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>XS</td>
+        <td><span class="size-value" data-inches="31">31</span>–<span class="size-value" data-inches="32">32</span></td>
+        <td><span class="size-value" data-inches="24">24</span>–<span class="size-value" data-inches="25">25</span></td>
+        <td><span class="size-value" data-inches="34">34</span>–<span class="size-value" data-inches="35">35</span></td>
+      </tr>
+      <tr>
+        <td>S</td>
+        <td><span class="size-value" data-inches="33">33</span>–<span class="size-value" data-inches="34">34</span></td>
+        <td><span class="size-value" data-inches="26">26</span>–<span class="size-value" data-inches="27">27</span></td>
+        <td><span class="size-value" data-inches="36">36</span>–<span class="size-value" data-inches="37">37</span></td>
+      </tr>
+      <tr>
+        <td>M</td>
+        <td><span class="size-value" data-inches="35">35</span>–<span class="size-value" data-inches="36">36</span></td>
+        <td><span class="size-value" data-inches="28">28</span>–<span class="size-value" data-inches="29">29</span></td>
+        <td><span class="size-value" data-inches="38">38</span>–<span class="size-value" data-inches="39">39</span></td>
+      </tr>
+      <tr>
+        <td>L</td>
+        <td><span class="size-value" data-inches="37">37</span>–<span class="size-value" data-inches="38">38</span></td>
+        <td><span class="size-value" data-inches="30">30</span>–<span class="size-value" data-inches="31">31</span></td>
+        <td><span class="size-value" data-inches="40">40</span>–<span class="size-value" data-inches="41">41</span></td>
+      </tr>
+      <tr>
+        <td>XL</td>
+        <td><span class="size-value" data-inches="39">39</span>–<span class="size-value" data-inches="41">41</span></td>
+        <td><span class="size-value" data-inches="32">32</span>–<span class="size-value" data-inches="34">34</span></td>
+        <td><span class="size-value" data-inches="42">42</span>–<span class="size-value" data-inches="44">44</span></td>
+      </tr>
+      <tr>
+        <td>XXL</td>
+        <td><span class="size-value" data-inches="42">42</span>–<span class="size-value" data-inches="44">44</span></td>
+        <td><span class="size-value" data-inches="35">35</span>–<span class="size-value" data-inches="37">37</span></td>
+        <td><span class="size-value" data-inches="45">45</span>–<span class="size-value" data-inches="47">47</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="size-chart-note"><em>*Measurements are in inches.</em></p>
+</div>
+
+<script>
+  (function () {
+    function initSizeToggle(context) {
+      if (!context || context._sizeToggleInitialized) return;
+      context._sizeToggleInitialized = true;
+
+      var unitOptions = context.querySelectorAll('.unit-option');
+      var sizeValues = context.querySelectorAll('.size-value');
+      if (!unitOptions.length || !sizeValues.length) return;
+
+      var inCM = false;
+
+      unitOptions.forEach(function (option) {
+        option.addEventListener('click', function () {
+          unitOptions.forEach(function (o) { o.classList.remove('active'); });
+          this.classList.add('active');
+          inCM = this.dataset.unit === 'cm';
+
+          sizeValues.forEach(function (span) {
+            var inches = parseFloat(span.getAttribute('data-inches'));
+            if (!isNaN(inches)) {
+              span.textContent = inCM ? (inches * 2.54).toFixed(1) : inches;
+            }
+          });
+
+          var note = context.querySelector('.size-chart-note');
+          if (note) {
+            note.innerHTML = inCM
+              ? '<em>*Measurements are in centimeters.</em>'
+              : '<em>*Measurements are in inches.</em>';
+          }
+        });
+      });
+    }
+
+    function handleDrawerClick(e) {
+      var btn = e.target.closest('[aria-controls]');
+      if (!btn) return;
+
+      var drawerId = btn.getAttribute('aria-controls');
+      var drawer = document.getElementById(drawerId);
+      if (drawer && drawer.querySelector('.size-chart-wrapper')) {
+        // Wait one frame for the drawer to finish opening/rendering
+        requestAnimationFrame(function () { initSizeToggle(drawer); });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        initSizeToggle(document);
+        document.addEventListener('click', handleDrawerClick);
+      });
+    } else {
+      initSizeToggle(document);
+      document.addEventListener('click', handleDrawerClick);
+    }
+  })();
+</script>

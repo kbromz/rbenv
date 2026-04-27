@@ -1,0 +1,442 @@
+{%- liquid
+  assign show_bust     = section.settings.show_bust
+  assign show_waist    = section.settings.show_waist
+  assign show_hip      = section.settings.show_hip
+  assign show_inseam   = section.settings.show_inseam
+  assign show_shoulder = section.settings.show_shoulder
+  assign show_length   = section.settings.show_length
+  assign use_range     = section.settings.use_range
+-%}
+
+<div class="size-chart-wrapper" data-size-chart-init="false">
+  <div class="size-chart-header">
+    <div class="size-chart-title">{{ section.settings.title }}</div>
+    <div class="unit-toggle">
+      <span class="unit-option active" data-unit="inches">{{ section.settings.label_inches | default: 'INCHES' }}</span>
+      <span class="unit-option" data-unit="cm">{{ section.settings.label_cm | default: 'CM' }}</span>
+    </div>
+  </div>
+
+  {%- if section.settings.description != blank -%}
+    <p class="size-chart-description">{{ section.settings.description }}</p>
+  {%- endif -%}
+
+  <div class="size-chart-table-wrapper">
+    <table class="size-chart-table">
+      <thead>
+        <tr>
+          <th>{{ section.settings.col_size | default: 'SIZE' }}</th>
+          {%- if show_bust -%}<th>{{ section.settings.col_bust | default: 'BUST' }}</th>{%- endif -%}
+          {%- if show_waist -%}<th>{{ section.settings.col_waist | default: 'WAIST' }}</th>{%- endif -%}
+          {%- if show_hip -%}<th>{{ section.settings.col_hip | default: 'HIP' }}</th>{%- endif -%}
+          {%- if show_inseam -%}<th>{{ section.settings.col_inseam | default: 'INSEAM' }}</th>{%- endif -%}
+          {%- if show_shoulder -%}<th>{{ section.settings.col_shoulder | default: 'SHOULDER' }}</th>{%- endif -%}
+          {%- if show_length -%}<th>{{ section.settings.col_length | default: 'LENGTH' }}</th>{%- endif -%}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'size_row' -%}
+            <tr {{ block.shopify_attributes }}>
+              <td class="size-chart__size-name">{{ block.settings.size_name }}</td>
+
+              {%- if show_bust -%}
+                <td>
+                  <span class="size-value" data-inches="{{ block.settings.bust_min }}">{{ block.settings.bust_min }}</span>
+                  {%- if use_range and block.settings.bust_max != blank and block.settings.bust_max != 0 -%}
+                    –<span class="size-value" data-inches="{{ block.settings.bust_max }}">{{ block.settings.bust_max }}</span>
+                  {%- endif -%}
+                </td>
+              {%- endif -%}
+
+              {%- if show_waist -%}
+                <td>
+                  <span class="size-value" data-inches="{{ block.settings.waist_min }}">{{ block.settings.waist_min }}</span>
+                  {%- if use_range and block.settings.waist_max != blank and block.settings.waist_max != 0 -%}
+                    –<span class="size-value" data-inches="{{ block.settings.waist_max }}">{{ block.settings.waist_max }}</span>
+                  {%- endif -%}
+                </td>
+              {%- endif -%}
+
+              {%- if show_hip -%}
+                <td>
+                  <span class="size-value" data-inches="{{ block.settings.hip_min }}">{{ block.settings.hip_min }}</span>
+                  {%- if use_range and block.settings.hip_max != blank and block.settings.hip_max != 0 -%}
+                    –<span class="size-value" data-inches="{{ block.settings.hip_max }}">{{ block.settings.hip_max }}</span>
+                  {%- endif -%}
+                </td>
+              {%- endif -%}
+
+              {%- if show_inseam -%}
+                <td>
+                  <span class="size-value" data-inches="{{ block.settings.inseam_min }}">{{ block.settings.inseam_min }}</span>
+                  {%- if use_range and block.settings.inseam_max != blank and block.settings.inseam_max != 0 -%}
+                    –<span class="size-value" data-inches="{{ block.settings.inseam_max }}">{{ block.settings.inseam_max }}</span>
+                  {%- endif -%}
+                </td>
+              {%- endif -%}
+
+              {%- if show_shoulder -%}
+                <td>
+                  <span class="size-value" data-inches="{{ block.settings.shoulder_min }}">{{ block.settings.shoulder_min }}</span>
+                  {%- if use_range and block.settings.shoulder_max != blank and block.settings.shoulder_max != 0 -%}
+                    –<span class="size-value" data-inches="{{ block.settings.shoulder_max }}">{{ block.settings.shoulder_max }}</span>
+                  {%- endif -%}
+                </td>
+              {%- endif -%}
+
+              {%- if show_length -%}
+                <td>
+                  <span class="size-value" data-inches="{{ block.settings.length_min }}">{{ block.settings.length_min }}</span>
+                  {%- if use_range and block.settings.length_max != blank and block.settings.length_max != 0 -%}
+                    –<span class="size-value" data-inches="{{ block.settings.length_max }}">{{ block.settings.length_max }}</span>
+                  {%- endif -%}
+                </td>
+              {%- endif -%}
+            </tr>
+          {%- endif -%}
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+
+  {%- if section.settings.note != blank -%}
+    <p class="size-chart-note"><em>{{ section.settings.note }}</em></p>
+  {%- endif -%}
+</div>
+
+<style>
+  .size-chart-wrapper {
+    width: 100%;
+    padding: 2rem 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .size-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .size-chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+  }
+
+  .size-chart-description {
+    font-size: 13px;
+    margin-bottom: 1.5rem;
+    color: #666;
+  }
+
+  .unit-toggle {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    display: flex;
+    gap: 16px;
+    cursor: pointer;
+  }
+
+  .unit-option {
+    color: #999;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .unit-option.active {
+    color: #000;
+    border-bottom: 1px solid #000;
+  }
+
+  .unit-option:hover {
+    color: #000;
+  }
+
+  .size-chart-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .size-chart-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .size-chart-table th,
+  .size-chart-table td {
+    border: 1px solid #e0e0e0;
+    padding: 10px 14px;
+    text-align: center;
+  }
+
+  .size-chart-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .size-chart__size-name {
+    font-weight: 600;
+  }
+
+  .size-chart-table tbody tr:hover {
+    background-color: #fafafa;
+  }
+
+  .size-chart-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .size-chart-wrapper {
+      padding: 1.5rem 1rem;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    function initSizeChart(wrapper) {
+      if (!wrapper || wrapper.dataset.sizeChartInit === 'true') return;
+      wrapper.dataset.sizeChartInit = 'true';
+
+      var unitOptions = wrapper.querySelectorAll('.unit-option');
+      var sizeValues  = wrapper.querySelectorAll('.size-value');
+      if (!unitOptions.length || !sizeValues.length) return;
+
+      var inCM = false;
+
+      unitOptions.forEach(function (option) {
+        option.addEventListener('click', function () {
+          unitOptions.forEach(function (o) { o.classList.remove('active'); });
+          this.classList.add('active');
+          inCM = this.dataset.unit === 'cm';
+
+          sizeValues.forEach(function (span) {
+            var inches = parseFloat(span.getAttribute('data-inches'));
+            if (!isNaN(inches)) {
+              span.textContent = inCM ? (inches * 2.54).toFixed(1) : inches;
+            }
+          });
+
+          var noteEm = wrapper.querySelector('.size-chart-note em');
+          if (noteEm) {
+            noteEm.textContent = inCM
+              ? '*Measurements are in centimeters.'
+              : '*Measurements are in inches.';
+          }
+        });
+      });
+    }
+
+    // Init on the standalone page view
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.size-chart-wrapper').forEach(function (w) {
+        initSizeChart(w);
+      });
+    });
+
+    // Expose for use by the drawer loader (variant-picker)
+    window.initSizeChart = window.initSizeChart || initSizeChart;
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Dynamic Size Chart",
+  "tag": "div",
+  "class": "size-chart-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "BODY MEASUREMENTS"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "placeholder": "e.g. All measurements are body measurements, not garment measurements."
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Footer note",
+      "default": "*Measurements are in inches.",
+      "placeholder": "e.g. *If between sizes, size up."
+    },
+    {
+      "type": "header",
+      "content": "Unit toggle labels"
+    },
+    {
+      "type": "text",
+      "id": "label_inches",
+      "label": "Inches label",
+      "default": "INCHES"
+    },
+    {
+      "type": "text",
+      "id": "label_cm",
+      "label": "CM label",
+      "default": "CM"
+    },
+    {
+      "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "text",
+      "id": "col_size",
+      "label": "Size column label",
+      "default": "SIZE"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bust",
+      "label": "Show Bust",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "col_bust",
+      "label": "Bust column label",
+      "default": "BUST"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_waist",
+      "label": "Show Waist",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "col_waist",
+      "label": "Waist column label",
+      "default": "WAIST"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hip",
+      "label": "Show Hip",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "col_hip",
+      "label": "Hip column label",
+      "default": "HIP"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inseam",
+      "label": "Show Inseam",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "col_inseam",
+      "label": "Inseam column label",
+      "default": "INSEAM"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shoulder",
+      "label": "Show Shoulder",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "col_shoulder",
+      "label": "Shoulder column label",
+      "default": "SHOULDER"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_length",
+      "label": "Show Length",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "col_length",
+      "label": "Length column label",
+      "default": "LENGTH"
+    },
+    {
+      "type": "header",
+      "content": "Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_range",
+      "label": "Show size ranges (min–max)",
+      "info": "When disabled, only the min value is shown.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "size_row",
+      "name": "Size row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size_name",
+          "label": "Size",
+          "default": "XS"
+        },
+        { "type": "header", "content": "Bust (inches)" },
+        { "type": "number", "id": "bust_min",     "label": "Bust min" },
+        { "type": "number", "id": "bust_max",     "label": "Bust max" },
+        { "type": "header", "content": "Waist (inches)" },
+        { "type": "number", "id": "waist_min",    "label": "Waist min" },
+        { "type": "number", "id": "waist_max",    "label": "Waist max" },
+        { "type": "header", "content": "Hip (inches)" },
+        { "type": "number", "id": "hip_min",      "label": "Hip min" },
+        { "type": "number", "id": "hip_max",      "label": "Hip max" },
+        { "type": "header", "content": "Inseam (inches)" },
+        { "type": "number", "id": "inseam_min",   "label": "Inseam min" },
+        { "type": "number", "id": "inseam_max",   "label": "Inseam max" },
+        { "type": "header", "content": "Shoulder (inches)" },
+        { "type": "number", "id": "shoulder_min", "label": "Shoulder min" },
+        { "type": "number", "id": "shoulder_max", "label": "Shoulder max" },
+        { "type": "header", "content": "Length (inches)" },
+        { "type": "number", "id": "length_min",   "label": "Length min" },
+        { "type": "number", "id": "length_max",   "label": "Length max" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dynamic Size Chart",
+      "blocks": [
+        { "type": "size_row", "settings": { "size_name": "XS",  "bust_min": 31, "bust_max": 32, "waist_min": 24, "waist_max": 25, "hip_min": 34, "hip_max": 35 } },
+        { "type": "size_row", "settings": { "size_name": "S",   "bust_min": 33, "bust_max": 34, "waist_min": 26, "waist_max": 27, "hip_min": 36, "hip_max": 37 } },
+        { "type": "size_row", "settings": { "size_name": "M",   "bust_min": 35, "bust_max": 36, "waist_min": 28, "waist_max": 29, "hip_min": 38, "hip_max": 39 } },
+        { "type": "size_row", "settings": { "size_name": "L",   "bust_min": 37, "bust_max": 38, "waist_min": 30, "waist_max": 31, "hip_min": 40, "hip_max": 41 } },
+        { "type": "size_row", "settings": { "size_name": "XL",  "bust_min": 39, "bust_max": 41, "waist_min": 32, "waist_max": 34, "hip_min": 42, "hip_max": 44 } },
+        { "type": "size_row", "settings": { "size_name": "XXL", "bust_min": 42, "bust_max": 44, "waist_min": 35, "waist_max": 37, "hip_min": 45, "hip_max": 47 } }
+      ]
+    }
+  ]
+}
+{% endschema %}
