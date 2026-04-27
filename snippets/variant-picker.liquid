@@ -66,6 +66,11 @@ Supported variables
       <fieldset class="variant-picker__option justify-{{ alignment }}">
         <div class="variant-picker__option-info {% if alignment == 'start' %}justify-between{% else %}justify-{{ alignment }}{% endif %}">
 
+          {%- comment -%}
+            Size‐chart button + drawer:
+            • on product.reworks.json  → render the 'size-chart-rework' snippet
+            • otherwise                → fetch the page content via JS
+          {%- endcomment -%}
           {%- if size_chart_page != blank and size_label_list contains option_downcase -%}
             {%- capture id -%}size-chart-{{ section.id }}-{{ block.id }}{%- endcapture -%}
             <button
@@ -82,9 +87,9 @@ Supported variables
             >
               <span class="h5" slot="header">{{ size_chart_page.title }}</span>
 
-              {%- if template.suffix == 'reworks' -%}
-                {%- render 'size-chart-rework' -%}
-              {%- else -%}
+              {% if template.suffix == 'reworks' %}
+                {% render 'size-chart-rework' %}
+              {% else %}
                 <div
                   class="size-chart-drawer-content"
                   data-size-chart-url="{{ size_chart_page.url }}"
@@ -92,7 +97,7 @@ Supported variables
                 >
                   <div class="size-chart-drawer-loading">Loading…</div>
                 </div>
-              {%- endif -%}
+              {% endif %}
 
             </x-drawer>
           {%- endif -%}
@@ -168,6 +173,7 @@ Supported variables
             </x-popover>
           </div>
         {%- else -%}
+          {% comment %} Swatch / block / variant-image rendering {% endcomment %}
           {% case resolved_option_selector_style %}
             {% when 'swatch' %}
               {% case settings.color_swatch_shape %}
@@ -194,7 +200,7 @@ Supported variables
             {%- assign input_name = form_id | append: '-option' | append: option.position -%}
             {%- for option_value in option.values -%}
               {% render 'option-value',
-                  type:            resolved_option_selector_style,
+                  type:            'swatch' | default: 'block',
                   form:            form_id,
                   option_value:    option_value,
                   param_name:      input_name,
@@ -280,7 +286,6 @@ Supported variables
             return;
           }
 
-          // Bring along the section styles so the table renders correctly inside the drawer
           var styleHTML = '';
           styles.forEach(function (s) { styleHTML += s.outerHTML; });
 
