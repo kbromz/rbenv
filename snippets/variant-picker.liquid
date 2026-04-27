@@ -85,7 +85,6 @@ Supported variables
               {%- if template.suffix == 'reworks' -%}
                 {%- render 'size-chart-rework' -%}
               {%- else -%}
-                {{- size_chart_page.url | json -}}
                 <div
                   class="size-chart-drawer-content"
                   data-size-chart-url="{{ size_chart_page.url }}"
